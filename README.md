@@ -41,9 +41,12 @@ See the `examples/` folder for sample data.
 
 ### Quick start
 
-Type `npm start` to start an interactive input of your data files or `npm start -- -h` for a list of command line arguments.
+Type `npm start -- --sendit` to start an interactive input of your data files or `npm start -- -h` for a list of command line arguments.
 
 The utility will batch send the email using the Mailgun batch API.
+
+Note that unless the `--sendit` command line argument is specified no email
+will be actually sent (fake mode by default).
 
 ### Recipient variables
 
