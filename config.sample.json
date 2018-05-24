@@ -1,0 +1,8 @@
+{
+  "mailgun": {
+    "domain": "foo.com",
+    "api_key": "<APIKEY>",
+    "sender": "Me <me@me.com>"
+  },
+  "csv_delimiter": ","
+}

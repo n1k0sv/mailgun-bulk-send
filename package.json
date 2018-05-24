@@ -1,0 +1,24 @@
+{
+  "name": "bulk-mailer",
+  "version": "0.1.0",
+  "description": "Send email to the masses",
+  "license": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "8.x.x"
+  },
+  "dependencies": {
+    "csv": "3.1.0",
+    "mailgun-js": "0.18.0",
+    "prompt": "^1.0.0",
+    "underscore": "^1.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}
