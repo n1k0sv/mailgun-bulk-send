@@ -7,6 +7,14 @@ const config = require('./load_config'),
     csv_parse = require('csv-parse'),
     _ = require('underscore');
 
+function chunkify(list, size) {
+  let i, j, response = [];
+  for (i = 0, j = list.length; i < j; i += size) {
+    response.push(list.slice(i, i + size));
+  }
+  return response;
+}
+
 function loadCSV(filename) {
   return new Promise((resolve, reject) => {
     const csvData = [];
@@ -34,7 +42,10 @@ function readFile(filename) {
 function validatePayload(payload) {
   return new Promise((resolve, reject) => {
     logger.info('Looking for empty data');
-    if (!payload.csv.length) return reject('CSV is empty');
+    if (payload.batch_size <= 0 || payload.batch_size > 1000) {
+      return reject('Batch size must be 0-1000');
+    }
+    if (!payload.users.length) return reject('No users to send to');
     if (!payload.subject) return reject('Subject is required');
     if (!payload.text) return reject('Text email body is required');
     if (!payload.html) return reject('HTML email body is required');
@@ -50,7 +61,7 @@ function validatePayload(payload) {
     }
     */
     logger.info('Validating CSV file contents');
-    var user_keys = _.keys(payload.csv[0]);
+    var user_keys = _.keys(payload.users[0]);
     logger.info('Found user keys: ' + user_keys.join(','));
     if (!_.contains(user_keys, 'email')) {
       return reject('"email" column is required in CSV file');
@@ -74,15 +85,38 @@ function validatePayload(payload) {
 
 function bulkSend(payload) {
   return new Promise((resolve, reject) => {
-    resolve();
+    const template = {
+      from: payload.sender,
+      subject: payload.subject,
+      text: payload.text,
+      html: payload.html,
+    };
+    logger.info(`Splitting users to chunks of ${payload.batch_size}`);
+    const chunks = chunkify(payload.users, payload.batch_size | 0);
+    let index = 0, total = chunks.length;
+
+    function process() {
+      var batch = chunks.shift();
+      if (!batch) return resolve();
+      index++;
+      logger.info(
+        `Sending batch ${index} / ${total} ` +
+        `to ${batch.length} users`);
+      // call mailgun here
+      process();
+    }
+    process();
   });
 }
 
 module.exports = (SETUP) => {
-  const payload = {};
+  const payload = {
+    batch_size: SETUP.batch_size,
+    sender: SETUP.sender,
+  };
   logger.info(`Reading CSV from: ${SETUP.csv}`);
-  loadCSV(SETUP.csv).then((csv) => {
-    payload.csv = csv;
+  loadCSV(SETUP.csv).then((users) => {
+    payload.users = users;
     logger.info(`Reading Subject from: ${SETUP.subject}`);
     return readFile(SETUP.subject);
   }).then((subject) => {

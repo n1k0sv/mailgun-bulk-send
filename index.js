@@ -14,6 +14,7 @@ let SETUP = {
   subject: '',
   html: '',
   text: '',
+  batch_size: 0,
 };
 
 // ------------------------ READ FROM COMMAND LINE ----------------------------
@@ -21,7 +22,15 @@ let SETUP = {
 // read command line arguments
 const args = process.argv.slice(2);
 if (_.contains(args, '-h') || _.contains(args, '--help')) {
-  logger.info('npm start -- [sender="who <me@here.com>"] [csv=users.csv] [subject=subject.txt] [html=body.html] [text=body.txt]');
+  logger.info([
+    'npm start -- ',
+    '[sender="who <me@here.com>"]',
+    '[csv=users.csv]',
+    '[subject=subject.txt]',
+    '[html=body.html]',
+    '[text=body.txt]',
+    '[batch_size=1000]'
+  ].join('\n  '));
   process.exit();
 }
 
@@ -32,6 +41,7 @@ _.each(args, (arg) => {
     }
   });
 });
+SETUP.batch_size = SETUP.batch_size | 0;
 
 // ------------------------ PROMPT FOR INPUT ----------------------------
 
@@ -72,6 +82,14 @@ if (!SETUP.text) {
     name: 'text',
     description: 'Path to text body file',
     required: true,
+  });
+}
+if (!SETUP.batch_size) {
+  prompt_schema.push({
+    name: 'batch_size',
+    description: 'Batch size (default 1)',
+    required: false,
+    default: 1,
   });
 }
 
