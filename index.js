@@ -15,6 +15,7 @@ let SETUP = {
   html: '',
   text: '',
   batch_size: 0,
+  fake: true,
 };
 
 // ------------------------ READ FROM COMMAND LINE ----------------------------
@@ -29,9 +30,14 @@ if (_.contains(args, '-h') || _.contains(args, '--help')) {
     '[subject=subject.txt]',
     '[html=body.html]',
     '[text=body.txt]',
-    '[batch_size=1000]'
+    '[batch_size=1000]',
+    '[--sendit]'
   ].join('\n  '));
   process.exit();
+}
+
+if (_.contains(args, '--sendit')) {
+  SETUP.fake = false;
 }
 
 _.each(args, (arg) => {
@@ -42,6 +48,15 @@ _.each(args, (arg) => {
   });
 });
 SETUP.batch_size = SETUP.batch_size | 0;
+
+if (SETUP.fake) {
+  logger.info(
+    'FAKE MODE: No email will be sent unless you specify the ' +
+    '--sendit command line argument');
+} else {
+  logger.info(
+    'REAL MODE: Emails will actually be sent!');
+}
 
 // ------------------------ PROMPT FOR INPUT ----------------------------
 

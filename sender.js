@@ -7,6 +7,11 @@ const config = require('./load_config'),
     csv_parse = require('csv-parse'),
     _ = require('underscore');
 
+const mailgun = require('mailgun-js')({
+  apiKey: config.mailgun.api_key,
+  domain: config.mailgun.domain,
+});
+
 function chunkify(list, size) {
   let i, j, response = [];
   for (i = 0, j = list.length; i < j; i += size) {
@@ -100,10 +105,36 @@ function bulkSend(payload) {
       if (!batch) return resolve();
       index++;
       logger.info(
-        `Sending batch ${index} / ${total} ` +
+        `\nSending batch ${index} / ${total} ` +
         `to ${batch.length} users`);
-      // call mailgun here
-      process();
+
+      // create a map for recipient variables
+      const recvars = {};
+      _.each(batch, (user) => {
+        recvars[user.email] = user;
+      });
+      const data = _.extend({
+        to: _.pluck(batch, 'email').join(', '),
+        'recipient-variables': JSON.stringify(recvars),
+      }, template);
+      if (payload.fake) {
+        logger.info('Fake send: ');
+        logger.info(data);
+        process();
+      } else {
+        mailgun.messages().send(data, (error, body) => {
+          if (error) {
+            logger.error('Batch failed, aborting:');
+            logger.error(data);
+            logger.error('First batch email was: ' + _.first(batch).email);
+            logger.error('Last batch email was: ' + _.last(batch).email);
+            return reject(error);
+          } else {
+            logger.info(body);
+            process();
+          }
+        });
+      }
     }
     process();
   });
@@ -111,6 +142,7 @@ function bulkSend(payload) {
 
 module.exports = (SETUP) => {
   const payload = {
+    fake: SETUP.fake,
     batch_size: SETUP.batch_size,
     sender: SETUP.sender,
   };
