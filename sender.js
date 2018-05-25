@@ -146,7 +146,7 @@ function bulkSend(payload) {
   });
 }
 
-module.exports = (SETUP) => {
+function sendCampaign(SETUP) {
   const payload = {
     fake: SETUP.fake,
     batch_size: SETUP.batch_size,
@@ -176,4 +176,14 @@ module.exports = (SETUP) => {
   }).catch((err) => {
     logger.error(err);
   });
+}
+
+module.exports = {
+  sendCampaign,
+  // exposed here for unit testing
+  bulkSend,
+  validatePayload,
+  readFile,
+  loadCSV,
+  chunkify,
 };

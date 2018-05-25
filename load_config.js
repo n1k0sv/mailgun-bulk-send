@@ -4,8 +4,18 @@ const logger = require('./logger');
 
 // read the configuration
 const config = (() => {
+  if (process.env.NODE_ENV) {
+    try {
+      const conf = require(`./config.${process.env.NODE_ENV}.json`);
+      logger.info(
+        `Loading configuration from config.${process.env.NODE_ENV}.json`);
+      return conf;
+    } catch (err) {}
+  }
   try {
-    return require('./config.json');
+    const conf = require('./config.json');
+    logger.info('Loading configuration from config.json');
+    return conf;
   } catch (err) {
     logger.fatal('Could not locate/read config.json');
   }

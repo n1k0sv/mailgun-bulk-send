@@ -5,7 +5,8 @@
   "license": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "NODE_ENV=test istanbul cover --include-all-sources__ _mocha -- --exit \"./tests/**/*spec.js\""
   },
   "engines": {
     "node": "8.x.x"
@@ -13,12 +14,16 @@
   "dependencies": {
     "csv": "3.1.0",
     "mailgun-js": "0.18.0",
-    "prompt": "^1.0.0",
-    "underscore": "^1.9.0"
+    "prompt": "1.0.0",
+    "underscore": "1.9.0"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "^4.19.1",
     "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "sinon": "^5.0.10"
   }
 }

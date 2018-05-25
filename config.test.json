@@ -1,0 +1,10 @@
+{
+  "mailgun": {
+    "domain": "a",
+    "api_key": "b",
+    "sender": "test@test",
+    "testmode": true,
+    "tags": ["foo", "bar"]
+  },
+  "csv_delimiter": ","
+}

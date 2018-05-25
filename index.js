@@ -2,7 +2,7 @@
 
 const config = require('./load_config'),
     logger = require('./logger'),
-    sender = require('./sender'),
+    sendCampaign = require('./sender').sendCampaign,
     _ = require('underscore'),
     prompt = require('prompt');
 
@@ -113,6 +113,6 @@ if (prompt_schema.length) {
   prompt.get(prompt_schema, (err, result) => {
     if (err) logger.fatal(err);
     SETUP = _.extendOwn(SETUP, result);
-    sender(SETUP);
+    sendCampaign(SETUP);
   });
-} else sender(SETUP);
+} else sendCampaign(SETUP);
