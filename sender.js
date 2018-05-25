@@ -96,6 +96,12 @@ function bulkSend(payload) {
       text: payload.text,
       html: payload.html,
     };
+    if (config.mailgun.testmode) {
+      template['o:testmode'] = true;
+    }
+    if (config.mailgun.tags && config.mailgun.tags.length) {
+      template['o:tag'] = config.mailgun.tags;
+    }
     logger.info(`Splitting users to chunks of ${payload.batch_size}`);
     const chunks = chunkify(payload.users, payload.batch_size | 0);
     let index = 0, total = chunks.length;

@@ -54,7 +54,17 @@ TODO
 
 ### Advanced usage
 
-TODO
+#### Mailgun testmode
+
+Mailgun supports [test mode](https://documentation.mailgun.com/en/latest/user_manual.html#manual-testmode) in order to consume the send API request but not
+actually send it. To enable test mode set `mailgun.testmode` to `true` in the
+`config.json`.
+
+> Note that Mailgun charges for test mode
+
+#### Mailgun tags
+
+Mailgun supports [tagging](https://documentation.mailgun.com/en/latest/user_manual.html#tagging) for categorizing email traffic. To add tags to the emails sent, populate the `mailgun.tags` array in the `config.json`.
 
 ### More examples
 

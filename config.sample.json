@@ -2,7 +2,9 @@
   "mailgun": {
     "domain": "foo.com",
     "api_key": "<APIKEY>",
-    "sender": "Me <me@me.com>"
+    "sender": "Me <me@me.com>",
+    "testmode": false,
+    "tags": ["foo", "bar"]
   },
   "csv_delimiter": ","
 }
