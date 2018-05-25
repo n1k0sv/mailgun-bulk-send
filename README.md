@@ -66,6 +66,10 @@ actually send it. To enable test mode set `mailgun.testmode` to `true` in the
 
 Mailgun supports [tagging](https://documentation.mailgun.com/en/latest/user_manual.html#tagging) for categorizing email traffic. To add tags to the emails sent, populate the `mailgun.tags` array in the `config.json`.
 
+#### Reply-to address
+
+To specify a reply-to address set the `mailgun.reply-to` property in `config.json`.
+
 #### More configs
 
 The easiest way to configure the utility is to provide a `config.json`, however you can also create a configuration file that is loaded based on the `NODE_ENV` enviroment variable. The utility will try to load a

@@ -3,8 +3,9 @@
     "domain": "foo.com",
     "api_key": "<APIKEY>",
     "sender": "Me <me@me.com>",
+    "reply-to": "",
     "testmode": false,
-    "tags": ["foo", "bar"]
+    "tags": ["foo", "bar"],
   },
   "csv_delimiter": ","
 }

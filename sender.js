@@ -54,17 +54,7 @@ function validatePayload(payload) {
     if (!payload.subject) return reject('Subject is required');
     if (!payload.text) return reject('Text email body is required');
     if (!payload.html) return reject('HTML email body is required');
-    // quick validation that html contains at least one recipient variable
-    /*
-    if (payload.html.indexOf('%recipient.') == -1) {
-      return reject('
-        HTML %recipient.x% variables are required for batch sending');
-    }
-    if (payload.text.indexOf('%recipient.') == -1) {
-      return reject('
-        Text %recipient.x% variables are required for batch sending');
-    }
-    */
+
     logger.info('Validating CSV file contents');
     var user_keys = _.keys(payload.users[0]);
     logger.info('Found user keys: ' + user_keys.join(','));
@@ -101,6 +91,9 @@ function bulkSend(payload) {
     }
     if (config.mailgun.tags && config.mailgun.tags.length) {
       template['o:tag'] = config.mailgun.tags;
+    }
+    if (config.mailgun['reply-to']) {
+      template['h:Reply-To'] = config.mailgun['reply-to'];
     }
     logger.info(`Splitting users to chunks of ${payload.batch_size}`);
     const chunks = chunkify(payload.users, payload.batch_size | 0);
