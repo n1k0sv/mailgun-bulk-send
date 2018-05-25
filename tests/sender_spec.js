@@ -35,3 +35,12 @@ describe('loadCSV', () => {
     });
   });
 });
+
+describe('readFile', () => {
+  it('loads file', (done) => {
+    sender.readFile('tests/fixtures/subject.txt').then((data) => {
+      expect(data).to.equal('Test subject');
+      done();
+    });
+  });
+});
